@@ -2,8 +2,6 @@
 date: '2025-07-25T13:37:10-04:00'
 draft: false
 title: 'Detecting Internal Domain Collision with MDE'
-description: 'A subtle misconfiguration led to unexpected domain leakage via MDE telemetry. Here’s how I caught it.'
-
 ---
 A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender for XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn’t malicious), and creating new rules for coverage gaps.
 
