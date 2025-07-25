@@ -1,21 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Ninous.dev</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on Ninous.dev</description>
-    <generator>Hugo -- 0.148.1</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 25 Jul 2025 13:38:59 -0400</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>disclaimer</title>
-      <link>http://localhost:1313/disclaimer/</link>
-      <pubDate>Fri, 25 Jul 2025 13:38:59 -0400</pubDate>
-      <guid>http://localhost:1313/disclaimer/</guid>
-      <description>&lt;p&gt;All content published on this blog reflects my &lt;strong&gt;personal views, research, and experience&lt;/strong&gt;, and &lt;strong&gt;does not represent the views or opinions of my employer&lt;/strong&gt;, clients, or any other entity I may be affiliated with.&lt;/p&gt;
-&lt;p&gt;This blog contains &lt;strong&gt;original work based on real-world professional experience&lt;/strong&gt;. While all technical information and insights are derived from genuine scenarios, &lt;strong&gt;identifying details are anonymized&lt;/strong&gt; to maintain &lt;strong&gt;client confidentiality and privacy&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;The material is provided &lt;strong&gt;for educational and informational purposes only&lt;/strong&gt;. I make no warranties or guarantees about the accuracy, completeness, or suitability of the content for any purpose. &lt;strong&gt;Any reliance you place on the information provided is strictly at your own risk.&lt;/strong&gt; I am not liable for any loss, damage, or consequences arising from the use or misuse of the content found on this site.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Ninous.dev</title><link>https://ninous.dev/</link><description>Recent content on Ninous.dev</description><generator>Hugo -- 0.148.1</generator><language>en-us</language><lastBuildDate>Fri, 25 Jul 2025 13:38:59 -0400</lastBuildDate><atom:link href="https://ninous.dev/index.xml" rel="self" type="application/rss+xml"/><item><title>disclaimer</title><link>https://ninous.dev/disclaimer/</link><pubDate>Fri, 25 Jul 2025 13:38:59 -0400</pubDate><guid>https://ninous.dev/disclaimer/</guid><description>&lt;p>All content published on this blog reflects my &lt;strong>personal views, research, and experience&lt;/strong>, and &lt;strong>does not represent the views or opinions of my employer&lt;/strong>, clients, or any other entity I may be affiliated with.&lt;/p>
+&lt;p>This blog contains &lt;strong>original work based on real-world professional experience&lt;/strong>. While all technical information and insights are derived from genuine scenarios, &lt;strong>identifying details are anonymized&lt;/strong> to maintain &lt;strong>client confidentiality and privacy&lt;/strong>.&lt;/p>
+&lt;p>The material is provided &lt;strong>for educational and informational purposes only&lt;/strong>. I make no warranties or guarantees about the accuracy, completeness, or suitability of the content for any purpose. &lt;strong>Any reliance you place on the information provided is strictly at your own risk.&lt;/strong> I am not liable for any loss, damage, or consequences arising from the use or misuse of the content found on this site.&lt;/p></description></item><item><title>whoami</title><link>https://ninous.dev/whoami/</link><pubDate>Fri, 25 Jul 2025 13:34:06 -0400</pubDate><guid>https://ninous.dev/whoami/</guid><description>&lt;p>Hi, I&amp;rsquo;m Ninous!&lt;br>
+A cybersecurity professional passionate about detection engineering, threat hunting, and breaking things to understand how they work.&lt;/p>
+&lt;p>I started this blog to document my work, research, and thoughts on cybersecurity, with a strong focus on &lt;strong>Microsoft Sentinel&lt;/strong>, &lt;strong>Defender XDR&lt;/strong>, &lt;strong>Detection Engineering&lt;/strong>, and &lt;strong>Threat Hunting&lt;/strong>.&lt;/p>
+&lt;p>I work in an MSSP environment as a &lt;strong>Sentinel Detection Specialist&lt;/strong>. I began my career as a &lt;strong>Level 1 Analyst&lt;/strong>, moved up to &lt;strong>Level 2&lt;/strong>, then became a &lt;strong>Specialist&lt;/strong>, and eventually co-founded our &lt;strong>Detection Engineering &amp;amp; Threat Hunting&lt;/strong> department.&lt;/p></description></item></channel></rss>
