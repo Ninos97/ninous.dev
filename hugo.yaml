@@ -14,7 +14,7 @@ params:
   homeInfoParams:
     Title: "Ninous.dev"
     Content: >
-        New blog!
+        Technical blog focused on Sentinel, Defender XDR, and detection logic.
   socialIcons:
     - name: email
       url: "mailto:ninous.saoumi@gmail.com"

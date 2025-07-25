@@ -18,6 +18,13 @@
 &lt;p&gt;The material is provided &lt;strong&gt;for educational and informational purposes only&lt;/strong&gt;. I make no warranties or guarantees about the accuracy, completeness, or suitability of the content for any purpose. &lt;strong&gt;Any reliance you place on the information provided is strictly at your own risk.&lt;/strong&gt; I am not liable for any loss, damage, or consequences arising from the use or misuse of the content found on this site.&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Detecting Internal Domain Collision with MDE</title>
+      <link>http://localhost:1313/posts/case-study/</link>
+      <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
+      <guid>http://localhost:1313/posts/case-study/</guid>
+      <description>A subtle misconfiguration led to unexpected domain leakage via MDE telemetry. Here’s how I caught it.</description>
+    </item>
+    <item>
       <title>whoami</title>
       <link>http://localhost:1313/whoami/</link>
       <pubDate>Fri, 25 Jul 2025 13:34:06 -0400</pubDate>

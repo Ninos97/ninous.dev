@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Ninous.dev</title><link>https://ninous.dev/posts/</link><description>Recent content in Posts on Ninous.dev</description><generator>Hugo 0.125.0</generator><language>en-us</language><lastBuildDate/><atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Ninous.dev</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Ninous.dev</description>
+    <generator>Hugo -- 0.148.1</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Jul 2025 13:37:10 -0400</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Detecting Internal Domain Collision with MDE</title>
+      <link>http://localhost:1313/posts/case-study/</link>
+      <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
+      <guid>http://localhost:1313/posts/case-study/</guid>
+      <description>A subtle misconfiguration led to unexpected domain leakage via MDE telemetry. Here’s how I caught it.</description>
+    </item>
+  </channel>
+</rss>
