@@ -1,6 +1,6 @@
 ---
 date: '2025-07-25T23:37:10-04:00'
-draft: true
+draft: false
 title: 'Detecting Internal Domain Collision with MDE'
 description: 'A subtle misconfiguration led to unexpected domain leakage via MDE telemetry. Here’s how I caught it.'
 
