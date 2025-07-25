@@ -1,0 +1,42 @@
+publishDir: "docs"
+baseURL: "https://ninous.dev/"
+languageCode: "en-us"
+title: "Ninous.dev"
+theme: "PaperMod"
+
+caches:
+  images:
+    dir: :cacheDir/images
+
+params:
+  homeInfoParams:
+    Title: "Ninous.dev"
+    Content: >
+        New blog!
+  socialIcons:
+    - name: email
+      url: "mailto:ninous.saoumi@gmail.com"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/ninous-s/"
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowCodeCopyButtons: true
+  defaultTheme: auto
+  comments: false
+
+menu:
+  main:
+  - identifier: posts
+    name: posts
+    url: /
+    weight: 10
+  - identifier: whoami
+    name: whoami
+    url: /whoami/
+    weight: 20
+  - identifier: disclaimer
+    name: disclaimer
+    url: /disclaimer/
+    weight: 30
+  
