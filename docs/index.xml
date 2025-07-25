@@ -22,7 +22,7 @@
       <link>http://localhost:1313/posts/case-study/</link>
       <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
       <guid>http://localhost:1313/posts/case-study/</guid>
-      <description>&lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender for XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn’t malicious), and creating new rules for coverage gaps.&lt;/p&gt;
+      <description>&lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn’t malicious), and creating new rules for coverage gaps.&lt;/p&gt;
 &lt;p&gt;The client had over &lt;strong&gt;1,500 Sentinel incidents&lt;/strong&gt; and &lt;strong&gt;900 Defender XDR incidents&lt;/strong&gt; in just 90 days, that&amp;rsquo;s over &lt;strong&gt;2,400 total&lt;/strong&gt;. That’s overwhelming for any SOC and guaranteed SLA breaches.&lt;/p&gt;</description>
     </item>
     <item>
