@@ -3,6 +3,8 @@ baseURL: "https://ninous.dev/"
 languageCode: "en-us"
 title: "Ninous.dev"
 theme: "PaperMod"
+canonifyurls: true
+relativeURLs: false
 
 caches:
   images:
