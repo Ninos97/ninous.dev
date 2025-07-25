@@ -7,8 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Detecting Internal Domain Collision with MDE | Ninous.dev</title>
 <meta name="keywords" content="">
-<meta name="description" content="A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn’t malicious), and creating new rules for coverage gaps.
-The client had over 1,500 Sentinel incidents and 900 Defender XDR incidents in just 90 days, that&rsquo;s over 2,400 total. That’s overwhelming for any SOC and guaranteed SLA breaches.">
+<meta name="description" content="A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&rsquo;t malicious), and creating new rules for coverage gaps.
+The client had over 1,500 Sentinel incidents and 900 Defender XDR incidents in just 90 days, that&rsquo;s over 2,400 total. That&rsquo;s overwhelming for any SOC and guaranteed SLA breaches.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/case-study/">
 <link crossorigin="anonymous" href="http://localhost:1313/assets/css/stylesheet.36819bea596090d8b48cf10d9831382996197aa7e4fc86f792f7c08c9ca4d23b.css" integrity="sha256-NoGb6llgkNi0jPENmDE4KZYZeqfk/Ib3kvfAjJyk0js=" rel="preload stylesheet" as="style">
@@ -97,17 +97,17 @@ The client had over 1,500 Sentinel incidents and 900 Defender XDR incidents in j
 
 </div>
   </header> 
-  <div class="post-content"><p>A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn’t malicious), and creating new rules for coverage gaps.</p>
-<p>The client had over <strong>1,500 Sentinel incidents</strong> and <strong>900 Defender XDR incidents</strong> in just 90 days, that&rsquo;s over <strong>2,400 total</strong>. That’s overwhelming for any SOC and guaranteed SLA breaches.</p>
+  <div class="post-content"><p>A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&rsquo;t malicious), and creating new rules for coverage gaps.</p>
+<p>The client had over <strong>1,500 Sentinel incidents</strong> and <strong>900 Defender XDR incidents</strong> in just 90 days, that&rsquo;s over <strong>2,400 total</strong>. That&rsquo;s overwhelming for any SOC and guaranteed SLA breaches.</p>
 <hr>
 <h2 id="step-1-analyzing-the-noise">Step 1: Analyzing the Noise<a hidden class="anchor" aria-hidden="true" href="#step-1-analyzing-the-noise">#</a></h2>
 <p>I started by identifying which rules were firing most. Many of the noisy rules were triggered by devices not following the expected naming convention.</p>
 <p>I learned something odd: while the client <strong>does not officially allow BYOD</strong>, they <strong>do</strong> allow users to sign in from unmanaged devices. Once signed in, <strong>Defender for Endpoint (MDE)</strong> gets deployed and begins collecting telemetry.</p>
-<p>Even stranger, some employees connect using <strong>partner company devices</strong>, which are part of entirely different environments. It’s not great practice, but&hellip; business requirements often trump security.</p>
-<p><strong>My first thought?</strong> If you don’t allow BYOD, enforce Conditional Access to block unmanaged devices. But I digress.</p>
+<p>Even stranger, some employees connect using <strong>partner company devices</strong>, which are part of entirely different environments. It&rsquo;s not great practice, but&hellip; business requirements often trump security.</p>
+<p><strong>My first thought?</strong> If you don&rsquo;t allow BYOD, enforce Conditional Access to block unmanaged devices. But I digress.</p>
 <hr>
 <h2 id="step-2-digging-into-internal-domains">Step 2: Digging into Internal Domains<a hidden class="anchor" aria-hidden="true" href="#step-2-digging-into-internal-domains">#</a></h2>
-<p>This setup got me thinking: could this be a supply-chain risk? I decided to hunt for devices with MDE installed that didn’t belong to the corporate domain.</p>
+<p>This setup got me thinking: could this be a supply-chain risk? I decided to hunt for devices with MDE installed that didn&rsquo;t belong to the corporate domain.</p>
 <p>I used the following KQL query to extract internal domain names from device names observed by MDE:</p>
 <pre tabindex="0"><code class="language-kql" data-lang="kql">union Device*
 | where Type !in (&#34;DeviceInfo&#34;, &#34;DeviceNetworkInfo&#34;) // Excluded for accuracy (explained later)
@@ -122,16 +122,16 @@ The client had over 1,500 Sentinel incidents and 900 Defender XDR incidents in j
 <code>device.unexpectedDomain.com</code></li>
 </ul>
 <p>I checked WHOIS&hellip; and the domain was <strong>available for purchase</strong>.</p>
-<p>🚨 🚩 <strong>That’s a red flag.</strong> 🚩 🚨</p>
+<p>🚨 🚩 <strong>That&rsquo;s a red flag.</strong> 🚩 🚨</p>
 <p>I jumped on a call with the client. Their official domain was <code>.net</code>, not <code>.com</code>. They were shocked and registered the domain immediately.</p>
 <hr>
 <h2 id="why-does-this-matter">Why Does This Matter?<a hidden class="anchor" aria-hidden="true" href="#why-does-this-matter">#</a></h2>
 <p>You might ask: <em>“So what if someone uses a real FQDN internally?”</em></p>
-<p>Here’s the risk:</p>
+<p>Here&rsquo;s the risk:</p>
 <ul>
 <li><strong>Internally</strong>, DNS resolves <code>dc1.unexpecteddomain.com</code> to an internal IP.</li>
 <li>But <strong>off-network</strong>, the device tries public DNS resolution.</li>
-<li>If someone <strong>buys that domain and sets up a DNS server</strong>, they’ll start receiving DNS requests. By consequence, potentially leaking <strong>service names</strong>, <strong>hostnames</strong>, and even <strong>NTLMv2 authentication attempts.</strong></li>
+<li>If someone <strong>buys that domain and sets up a DNS server</strong>, they&rsquo;ll start receiving DNS requests. By consequence, potentially leaking <strong>service names</strong>, <strong>hostnames</strong>, and even <strong>NTLMv2 authentication attempts.</strong></li>
 </ul>
 <p><strong>How?</strong> It follows the DNS resolution chain:</p>
 <ul>
@@ -143,26 +143,26 @@ The client had over 1,500 Sentinel incidents and 900 Defender XDR incidents in j
 <hr>
 <h2 id="a-real-world-example">A Real-World Example<a hidden class="anchor" aria-hidden="true" href="#a-real-world-example">#</a></h2>
 <p>This exact scenario was documented in a talk by <strong>Philippe Caturegli</strong> (<a href="https://www.youtube.com/watch?v=Dq0iCgEQNhM">Watch it here</a>).</p>
-<p>In a red team engagement, he noticed a similar internal FQDN available online. He bought the domain, set up a DNS listener, and was flooded with requests from the client’s environment, including NTLMv2 authentication attempts.</p>
-<p>With some cracking, he recovered credentials, bypassed MFA, and gained VPN access. Go watch the talk if you haven’t. It’s gold.</p>
+<p>In a red team engagement, he noticed a similar internal FQDN available online. He bought the domain, set up a DNS listener, and was flooded with requests from the client&rsquo;s environment, including NTLMv2 authentication attempts.</p>
+<p>With some cracking, he recovered credentials, bypassed MFA, and gained VPN access. Go watch the talk if you haven&rsquo;t. It&rsquo;s gold.</p>
 <hr>
 <h2 id="step-3-what-about-deviceinfo-and-devicenetworkinfo">Step 3: What About DeviceInfo and DeviceNetworkInfo?<a hidden class="anchor" aria-hidden="true" href="#step-3-what-about-deviceinfo-and-devicenetworkinfo">#</a></h2>
 <p>I excluded those tables from the earlier query. Why?</p>
-<p>Because <strong>MDE performs subnet discovery</strong> on nearby devices <em>only</em> if it considers the environment corporate (e.g., joined to Entra ID or hybrid-joined). This can result in telemetry from <strong>external</strong> or <strong>partner-owned</strong> devices being recorded, even if they aren’t onboarded.</p>
+<p>Because <strong>MDE performs subnet discovery</strong> on nearby devices <em>only</em> if it considers the environment corporate (e.g., joined to Entra ID or hybrid-joined). This can result in telemetry from <strong>external</strong> or <strong>partner-owned</strong> devices being recorded, even if they aren&rsquo;t onboarded.</p>
 <p>So I ran the query again, this time <strong>targeting non-client domains only</strong>.</p>
 <hr>
 <h2 id="the-results-were-wild">The Results Were Wild<a hidden class="anchor" aria-hidden="true" href="#the-results-were-wild">#</a></h2>
 <p>I found tons of unrelated internal FQDNs. Most were still available for registration.</p>
 <p>But one stood out:</p>
-<pre tabindex="0"><code>deviceName.internal.AD
+<pre tabindex="0"><code>deviceName.internalDomainCompanyName.AD
 </code></pre><p>At first glance, <code>.AD</code> looks like a harmless abbreviation for Active Directory.</p>
 <p>But in reality, <code>.AD</code> is the <strong>country code top-level domain (ccTLD) for Andorra</strong>. <br>
 A country with an active DNS infrastructure.</p>
-<p>If someone registered <code>internal.ad</code>, stood up a DNS server, and waited… any misconfigured system trying to resolve <code>*.internal.ad</code> would leak sensitive DNS traffic.</p>
+<p>If someone registered <code>internalDomainCompanyName.ad</code>, set up a DNS server, and waited… any misconfigured system trying to resolve <code>*.internalDomainCompanyName.ad</code> would leak sensitive DNS traffic.</p>
 <p>The client chose not to investigate further, since the devices belonged to external partners. However, this is exactly how <strong>supply-chain risks</strong> begin, when trusted business relationships introduce indirect exposure.</p>
 <hr>
 <h2 id="detection-unexpected-internal-domains-in-device-names">Detection: Unexpected Internal Domains in Device Names<a hidden class="anchor" aria-hidden="true" href="#detection-unexpected-internal-domains-in-device-names">#</a></h2>
-<p>Once you&rsquo;ve completed your initial hunting and defined your expected internal domains (or built a watchlist), you can operationalize this query as an analytics rule. It runs hourly and flags unexpected domains showing up in <code>DeviceName</code> fields across MDE tables.</p>
+<p>Once you&rsquo;ve completed your initial hunting and defined your expected internal domains (or put it a watchlist), you can use this query as an analytics rule. It runs hourly and flags unexpected domains showing up in <code>DeviceName</code> fields across MDE tables.</p>
 <pre tabindex="0"><code class="language-kql" data-lang="kql">let knownInternalDomains = dynamic([&#34;corpdomain.local&#34;, &#34;corpdomain.tld&#34;]); // Replace or reference a watchlist if preferred
 union Device*
 | where TimeGenerated &gt; ago(1h)
@@ -176,20 +176,29 @@ union Device*
 </code></pre><hr>
 <h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
 <ul>
-<li><strong>Never use real-world TLDs</strong> like <code>.com</code>, <code>.net</code>, <code>.ad</code>, <code>.ca</code>, etc. for internal-only domains.</li>
-<li>Use <code>.local</code>, <code>.lan</code>, <code>.internal</code>, or reserved <code>.invalid</code> to avoid collisions.</li>
-<li>Audit internal device telemetry regularly for unexpected FQDNs, especially in MDE and Sentinel.</li>
+<li>
+<p><strong>Use real TLDs (e.g., <code>.com</code>, <code>.net</code>, <code>.ad</code>, <code>.ca</code>) for internal domains only if you own and control the domain.</strong><br>
+Even though ICANN recommends using subdomains (e.g., <code>internal.company.com</code>), this still carries risk, such as subdomain takeover, DNS leaks, or wildcard certificate abuse. Keep monitoring for dangling or misconfigured records.</p>
+</li>
+<li>
+<p><strong>Usage of non-public like <code>.local</code>, <code>.lan</code>, or <code>.internal</code></strong><br>
+They Eliminate the risks of data leakage but they are not standards-compliant and can break service discovery (mDNS), Kerberos authentication, and TLS certificate issuance in certain environments.</p>
+</li>
+<li>
+<p><strong>Audit internal telemetry regularly to detect leaks of internal FQDNs.</strong><br>
+Use MDE (Microsoft Defender for Endpoint), Microsoft Sentinel, DNS logs, or proxy telemetry to spot internal names exposed in external traffic, beaconing, or cloud access.</p>
+</li>
 </ul>
 <hr>
 <h2 id="final-thoughts">Final Thoughts<a hidden class="anchor" aria-hidden="true" href="#final-thoughts">#</a></h2>
-<p>This wasn’t an elite 0-day. But it’s exactly the kind of misconfiguration that’s:</p>
+<p>This wasn&rsquo;t an elite 0-day. But it&rsquo;s exactly the kind of misconfiguration that&rsquo;s:</p>
 <ul>
 <li>Easy to overlook</li>
 <li>Exploitable with minimal effort</li>
 <li>Capable of causing real damage</li>
 </ul>
-<p>If you’re running Sentinel or MDE, run the query I shared and see what’s lurking in your device names.</p>
-<p>You might be surprised what’s leaking.</p>
+<p>If you&rsquo;re running Sentinel or MDE, run the query I shared and see what&rsquo;s lurking in your device names.</p>
+<p>You might be surprised what&rsquo;s leaking.</p>
 <p><strong>Thanks for reading.</strong><br>
 Hope this helped you see internal domain names in a new light.</p>
 
