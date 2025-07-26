@@ -18,12 +18,15 @@
 &lt;p&gt;The material is provided &lt;strong&gt;for educational and informational purposes only&lt;/strong&gt;. I make no warranties or guarantees about the accuracy, completeness, or suitability of the content for any purpose. &lt;strong&gt;Any reliance you place on the information provided is strictly at your own risk.&lt;/strong&gt; I am not liable for any loss, damage, or consequences arising from the use or misuse of the content found on this site.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Detecting Internal Domain Collision with MDE</title>
+      <title>Detecting Internal Domain Collision with Defender for Endpoint</title>
       <link>http://localhost:1313/posts/case-study/</link>
       <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
       <guid>http://localhost:1313/posts/case-study/</guid>
-      <description>&lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&amp;rsquo;t malicious), and creating new rules for coverage gaps.&lt;/p&gt;
-&lt;p&gt;The client had over &lt;strong&gt;1,500 Sentinel incidents&lt;/strong&gt; and &lt;strong&gt;900 Defender XDR incidents&lt;/strong&gt; in just 90 days, that&amp;rsquo;s over &lt;strong&gt;2,400 total&lt;/strong&gt;. That&amp;rsquo;s overwhelming for any SOC and guaranteed SLA breaches.&lt;/p&gt;</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;While onboarding a client to Microsoft Sentinel and MDE, I discovered a subtle misconfiguration involving internal device names leaking to public DNS. This blog breaks down how I found it, the detection logic I used, and how this seemingly harmless mistake could have led to credential theft through a supply-chain vector.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-setting&#34;&gt;The Setting&lt;/h2&gt;
+&lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&amp;rsquo;t malicious), and creating new rules for coverage gaps.&lt;/p&gt;</description>
     </item>
     <item>
       <title>whoami</title>

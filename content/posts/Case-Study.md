@@ -1,8 +1,13 @@
 ---
 date: '2025-07-25T13:37:10-04:00'
 draft: false
-title: 'Detecting Internal Domain Collision with MDE'
+title: 'Detecting Internal Domain Collision with Defender for Endpoint'
 ---
+> While onboarding a client to Microsoft Sentinel and MDE, I discovered a subtle misconfiguration involving internal device names leaking to public DNS. This blog breaks down how I found it, the detection logic I used, and how this seemingly harmless mistake could have led to credential theft through a supply-chain vector.
+
+---
+## The Setting
+
 A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn't malicious), and creating new rules for coverage gaps.
 
 The client had over **1,500 Sentinel incidents** and **900 Defender XDR incidents** in just 90 days, that's over **2,400 total**. That's overwhelming for any SOC and guaranteed SLA breaches.
@@ -136,7 +141,7 @@ union Device*
   They Eliminate the risks of data leakage but they are not standards-compliant and can break service discovery (mDNS), Kerberos authentication, and TLS certificate issuance in certain environments.
 
 - **Audit internal telemetry regularly to detect leaks of internal FQDNs.**  
-  Use MDE (Microsoft Defender for Endpoint), Microsoft Sentinel, DNS logs, or proxy telemetry to spot internal names exposed in external traffic, beaconing, or cloud access.
+  Use MDE, Microsoft Sentinel, DNS logs, or any other relevant telemetry to spot internal names exposed in external traffic, beaconing, or cloud access.
 
 ---
 
