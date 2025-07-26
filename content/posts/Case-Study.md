@@ -18,7 +18,7 @@ The client had over **1,500 Sentinel incidents** and **900 Defender XDR incident
 
 I started by identifying which rules were firing most. Many of the noisy rules were triggered by devices not following the expected naming convention.
 
-I learned something odd: while the client **does not officially allow BYOD**, they **do** allow users to sign in from unmanaged devices. Once signed in, **Defender for Endpoint (MDE)** gets deployed and begins collecting telemetry.
+I learned something odd: while the client **does not officially allow BYOD**, they **do** allow users to sign in from unmanaged devices. Once signed in, **Defender for Endpoint** gets deployed and begins collecting telemetry.
 
 Even stranger, some employees connect using **partner company devices**, which are part of entirely different environments. It's not great practice, but... business requirements often trump security.
 

@@ -4,20 +4,8 @@ draft: false
 title: 'whoami'
 url: "/whoami/"
 ---
-Hi, I'm Ninous!\
-A cybersecurity professional passionate about detection engineering, threat hunting, and breaking things to understand how they work.
 
-I started this blog to document my work, research, and thoughts on cybersecurity, with a strong focus on **Microsoft Sentinel**, **Defender XDR**, **Detection Engineering**, and **Threat Hunting**.
+I’m a cybersecurity professional focused on detection engineering, threat hunting, and breaking things to understand how they work. I work at an MSSP as a **Sentinel Detection Specialist**, where I design high-fidelity analytical rules, fine-tune detections to improve signal quality, and enhance threat coverage while reducing alert fatigue across **Microsoft Sentinel** and **Defender XDR**. I also support incident investigations across the Microsoft security stack.
 
-I work in an MSSP environment as a **Sentinel Detection Specialist**. I began my career as a **Level 1 Analyst**, moved up to **Level 2**, then became a **Specialist**, and eventually co-founded our **Detection Engineering & Threat Hunting** department.
-
-
-This blog is a personal space where I share:
-- Insights and original research from real-world work
-- Practical breakdowns of detection logic
-- My thought process and approach to threat hunting
-- Experiments, failures, and lessons learned
-
-Hope you find some value :)
-
-\- Ninous
+I started this blog to document my work, research, and thought process, sharing practical breakdowns of detection logic, real-world insights from engineering projects, and lessons learned through experiments and edge cases. This is a personal space where I explore ideas, challenge assumptions, and try to bring clarity to complex problems.  
+**Hope you find something useful here.**

@@ -33,10 +33,9 @@
       <link>http://localhost:1313/whoami/</link>
       <pubDate>Fri, 25 Jul 2025 13:34:06 -0400</pubDate>
       <guid>http://localhost:1313/whoami/</guid>
-      <description>&lt;p&gt;Hi, I&amp;rsquo;m Ninous!&lt;br&gt;
-A cybersecurity professional passionate about detection engineering, threat hunting, and breaking things to understand how they work.&lt;/p&gt;
-&lt;p&gt;I started this blog to document my work, research, and thoughts on cybersecurity, with a strong focus on &lt;strong&gt;Microsoft Sentinel&lt;/strong&gt;, &lt;strong&gt;Defender XDR&lt;/strong&gt;, &lt;strong&gt;Detection Engineering&lt;/strong&gt;, and &lt;strong&gt;Threat Hunting&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;I work in an MSSP environment as a &lt;strong&gt;Sentinel Detection Specialist&lt;/strong&gt;. I began my career as a &lt;strong&gt;Level 1 Analyst&lt;/strong&gt;, moved up to &lt;strong&gt;Level 2&lt;/strong&gt;, then became a &lt;strong&gt;Specialist&lt;/strong&gt;, and eventually co-founded our &lt;strong&gt;Detection Engineering &amp;amp; Threat Hunting&lt;/strong&gt; department.&lt;/p&gt;</description>
+      <description>&lt;p&gt;I’m a cybersecurity professional focused on detection engineering, threat hunting, and breaking things to understand how they work. I work at an MSSP as a &lt;strong&gt;Sentinel Detection Specialist&lt;/strong&gt;, where I design high-fidelity analytical rules, fine-tune detections to improve signal quality, and enhance threat coverage while reducing alert fatigue across &lt;strong&gt;Microsoft Sentinel&lt;/strong&gt; and &lt;strong&gt;Defender XDR&lt;/strong&gt;. I also support incident investigations across the Microsoft security stack.&lt;/p&gt;
+&lt;p&gt;I started this blog to document my work, research, and thought process, sharing practical breakdowns of detection logic, real-world insights from engineering projects, and lessons learned through experiments and edge cases. This is a personal space where I explore ideas, challenge assumptions, and try to bring clarity to complex problems.&lt;br&gt;
+&lt;strong&gt;Hope you find something useful here.&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
