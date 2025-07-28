@@ -109,7 +109,7 @@ A recent project involved onboarding a new client to Microsoft Sentinel. Their t
 <hr>
 <h2 id="step-1-analyzing-the-noise">Step 1: Analyzing the Noise<a hidden class="anchor" aria-hidden="true" href="#step-1-analyzing-the-noise">#</a></h2>
 <p>I started by identifying which rules were firing most. Many of the noisy rules were triggered by devices not following the expected naming convention.</p>
-<p>I learned something odd: while the client <strong>does not officially allow BYOD</strong>, they <strong>do</strong> allow users to sign in from unmanaged devices. Once signed in, <strong>Defender for Endpoint</strong> gets deployed and begins collecting telemetry.</p>
+<p>I learned something odd: while the client <strong>does not officially allow BYOD</strong>, they <strong>do</strong> allow users to sign in from unmanaged devices. Once signed in, <strong>Defender for Endpoint (MDE)</strong> gets deployed and begins collecting telemetry.</p>
 <p>Even stranger, some employees connect using <strong>partner company devices</strong>, which are part of entirely different environments. It&rsquo;s not great practice, but&hellip; business requirements often trump security.</p>
 <p><strong>My first thought?</strong> If you don&rsquo;t allow BYOD, enforce Conditional Access to block unmanaged devices. But I digress.</p>
 <hr>
@@ -169,7 +169,7 @@ A country with an active DNS infrastructure.</p>
 <p>The client chose not to investigate further, since the devices belonged to external partners. However, this is exactly how <strong>supply-chain risks</strong> begin, when trusted business relationships introduce indirect exposure.</p>
 <hr>
 <h2 id="detection-unexpected-internal-domains-in-device-names">Detection: Unexpected Internal Domains in Device Names<a hidden class="anchor" aria-hidden="true" href="#detection-unexpected-internal-domains-in-device-names">#</a></h2>
-<p>Once you&rsquo;ve completed your initial hunting and defined your expected internal domains (or put it a watchlist), you can use this query as an analytics rule. It runs hourly and flags unexpected domains showing up in <code>DeviceName</code> fields across MDE tables.</p>
+<p>Once you&rsquo;ve completed your initial hunting and defined your expected internal domains (or put it a in watchlist), you can use this query as an analytics rule. It runs hourly and flags unexpected domains showing up in <code>DeviceName</code> fields across MDE tables.</p>
 <pre tabindex="0"><code class="language-kql" data-lang="kql">let knownInternalDomains = dynamic([&#34;corpdomain.local&#34;, &#34;corpdomain.tld&#34;]); // Replace or reference a watchlist if preferred
 union Device*
 | where TimeGenerated &gt; ago(1h)
