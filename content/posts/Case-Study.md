@@ -115,7 +115,7 @@ The client chose not to investigate further, since the devices belonged to exter
 
 ## Detection: Unexpected Internal Domains in Device Names
 
-Once you've completed your initial hunting and defined your expected internal domains (or put it a in watchlist), you can use this query as an analytics rule. It runs hourly and flags unexpected domains showing up in `DeviceName` fields across MDE tables.
+Once you've completed your initial hunting and defined your expected internal domains (or put it in a watchlist), you can use this query as an analytics rule. It runs hourly and flags unexpected domains showing up in `DeviceName` fields across MDE tables.
 
 ```kql
 let knownInternalDomains = dynamic(["corpdomain.local", "corpdomain.tld"]); // Replace or reference a watchlist if preferred
