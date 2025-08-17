@@ -69,7 +69,7 @@ Basically, they don't usually make it to the internet, which makes them less use
 
 ---
 
-## Phase 4 – Testing TCP/UDP Packets with NPcap
+## Phase 4: Testing TCP/UDP Packets with NPcap
 
 ### UDP: Fully Invisible
 - UDP traffic was completely invisible to MDE, **except on port 53**, where it showed the actionType `DnsConnectionInspected`.  
