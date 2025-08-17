@@ -2,18 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Ninous.dev</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://ninous.dev/posts/</link>
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Jul 2025 13:37:10 -0400</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Aug 2025 15:15:00 -0400</lastBuildDate>
+    <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Detecting Internal Domain Collision with MDE</title>
-      <link>http://localhost:1313/posts/case-study/</link>
+      <title>Hiding in Plain Sight: MDE&#39;s Network Telemetry Blindspots</title>
+      <link>https://ninous.dev/posts/mde_npcap_blindspots/</link>
+      <pubDate>Sat, 16 Aug 2025 15:15:00 -0400</pubDate>
+      <guid>https://ninous.dev/posts/mde_npcap_blindspots/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;Earlier this year on LinkedIn, I shared a quirky &amp;ldquo;feature&amp;rdquo; in Microsoft Defender for Endpoint (MDE): it happily accepts input from the user as trusted without any validation.&lt;br&gt;
+&lt;a href=&#34;https://www.linkedin.com/feed/update/urn:li:activity:7317305441527422976/&#34;&gt;(LinkedIn Post)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl.exe 142.250.69.142 -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;host: example.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;#One of Google&amp;#39;s IPs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In MDE, the &lt;code&gt;RemoteUrl&lt;/code&gt; field will log &lt;em&gt;example.com&lt;/em&gt;, not the actual destination domain behind the IP.&lt;br&gt;
+Not an exploit, but a perfect way to hide malicious traffic under the &amp;ldquo;safe domains&amp;rdquo; umbrella. If your hunting queries filter out common benign sites, you&amp;rsquo;ll miss it entirely.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Detecting Internal Domain Collision with Defender for Endpoint</title>
+      <link>https://ninous.dev/posts/case-study/</link>
       <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
-      <guid>http://localhost:1313/posts/case-study/</guid>
-      <description>A subtle misconfiguration led to unexpected domain leakage via MDE telemetry. Here’s how I caught it.</description>
+      <guid>https://ninous.dev/posts/case-study/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;While onboarding a client to Microsoft Sentinel and MDE, I discovered a subtle misconfiguration involving internal device names leaking to public DNS. This blog breaks down how I found it, the detection logic I used, and how this seemingly harmless mistake could have led to credential theft through a supply-chain vector.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-setting&#34;&gt;The Setting&lt;/h2&gt;
+&lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&amp;rsquo;t malicious), and creating new rules for coverage gaps.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
