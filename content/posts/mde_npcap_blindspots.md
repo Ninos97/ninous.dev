@@ -1,7 +1,7 @@
 ---
 date: '2025-08-16T15:15:00-04:00'
 draft: false
-title: "Hiding in Plain Sight: MDE's Network Telemetry Blindspots" 
+title: "Blindspots in Defender for Endpoint: What MDE Misses in Network Traffic" 
 ---
 
 ## Intro

@@ -2,26 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ninous.dev/posts/mde_npcap_blindspots/</loc>
+    <loc>http://localhost:1313/posts/mde_npcap_blindspots/</loc>
     <lastmod>2025-08-16T15:15:00-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-08-16T15:15:00-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/posts/</loc>
+    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-08-16T15:15:00-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/disclaimer/</loc>
+    <loc>http://localhost:1313/disclaimer/</loc>
     <lastmod>2025-07-25T13:38:59-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/posts/case-study/</loc>
+    <loc>http://localhost:1313/posts/case-study/</loc>
     <lastmod>2025-07-25T13:37:10-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/whoami/</loc>
+    <loc>http://localhost:1313/whoami/</loc>
     <lastmod>2025-07-25T13:34:06-04:00</lastmod>
   </url><url>
-    <loc>https://ninous.dev/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>https://ninous.dev/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
   </url>
 </urlset>
