@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Ninous.dev</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://ninous.dev/posts/</link>
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 16 Aug 2025 15:15:00 -0400</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hiding in Plain Sight: MDE&#39;s Network Telemetry Blindspots</title>
-      <link>http://localhost:1313/posts/mde_npcap_blindspots/</link>
+      <title>Blindspots in Defender for Endpoint: What MDE misses in Network Traffic</title>
+      <link>https://ninous.dev/posts/mde_npcap_blindspots/</link>
       <pubDate>Sat, 16 Aug 2025 15:15:00 -0400</pubDate>
-      <guid>http://localhost:1313/posts/mde_npcap_blindspots/</guid>
+      <guid>https://ninous.dev/posts/mde_npcap_blindspots/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;Earlier this year on LinkedIn, I shared a quirky &amp;ldquo;feature&amp;rdquo; in Microsoft Defender for Endpoint (MDE): it happily accepts input from the user as trusted without any validation.&lt;br&gt;
 &lt;a href=&#34;https://www.linkedin.com/feed/update/urn:li:activity:7317305441527422976/&#34;&gt;(LinkedIn Post)&lt;/a&gt;.&lt;/p&gt;
@@ -23,9 +23,9 @@ Not an exploit, but a perfect way to hide malicious traffic under the &amp;ldquo
     </item>
     <item>
       <title>Detecting Internal Domain Collision with Defender for Endpoint</title>
-      <link>http://localhost:1313/posts/case-study/</link>
+      <link>https://ninous.dev/posts/case-study/</link>
       <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
-      <guid>http://localhost:1313/posts/case-study/</guid>
+      <guid>https://ninous.dev/posts/case-study/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;While onboarding a client to Microsoft Sentinel and MDE, I discovered a subtle misconfiguration involving internal device names leaking to public DNS. This blog breaks down how I found it, the detection logic I used, and how this seemingly harmless mistake could have led to credential theft through a supply-chain vector.&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
