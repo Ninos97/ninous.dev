@@ -1,7 +1,7 @@
 ---
 date: '2025-08-16T15:15:00-04:00'
 draft: false
-title: "Blindspots in Defender for Endpoint: What MDE misses in Network Traffic" 
+title: "Blindspots in Defender for Endpoint: What MDE Misses in Network Traffic" 
 ---
 
 ## Intro
