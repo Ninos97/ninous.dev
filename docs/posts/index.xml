@@ -2,17 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Ninous.dev</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://ninous.dev/posts/</link>
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 16 Aug 2025 15:15:00 -0400</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 06 Sep 2025 18:52:10 -0400</lastBuildDate>
+    <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>When Trusted Senders Become Threats: A BEC Case Study in Microsoft 365</title>
+      <link>https://ninous.dev/posts/bec_case_study/</link>
+      <pubDate>Sat, 06 Sep 2025 18:52:10 -0400</pubDate>
+      <guid>https://ninous.dev/posts/bec_case_study/</guid>
+      <description>&lt;p&gt;Recently I received a ticket to create a detection for a client BEC. Microsoft Defender for Office 365 (MDO) didn&amp;rsquo;t flag the phishing email, but Entra ID raised &lt;strong&gt;Unfamiliar sign-in properties&lt;/strong&gt; and the incident surfaced in Sentinel.&lt;/p&gt;
+&lt;h2 id=&#34;storytime-the-signals-we-saw&#34;&gt;Storytime: the signals we saw&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Sentinel incident: &lt;strong&gt;unfamiliar sign-in properties&lt;/strong&gt;; RiskEventType: &amp;ldquo;unfamiliarFeatures&amp;rdquo; and &amp;ldquo;passwordSpray&amp;rdquo;.&lt;/li&gt;
+&lt;li&gt;Indicators: &lt;strong&gt;User-Agent &lt;code&gt;axios/1.11.0&lt;/code&gt;&lt;/strong&gt;, sign-in source: &lt;strong&gt;M247-LTD Los Angeles Infrastructure&lt;/strong&gt; (&lt;code&gt;m247global.com&lt;/code&gt;); Classic hosting/DC footprint.&lt;/li&gt;
+&lt;li&gt;Conditional Access forced MFA; logs confirm &lt;strong&gt;MFA was passed&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;The client confirmed compromise. The user was not using VPN or any odd third-party apps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I pivoted to URL clicks around the time of the malicious sign-in. In &lt;strong&gt;UrlClickEvents&lt;/strong&gt; for the victim over the prior few minutes to hours, most URLs looked normal, but one stood out. Sandboxing showed a &lt;strong&gt;&amp;ldquo;file was shared -&amp;gt; enter email&amp;rdquo;&lt;/strong&gt; lure that then &lt;strong&gt;redirected to a newly registered &lt;code&gt;.ru&lt;/code&gt;&lt;/strong&gt; page impersonating Microsoft 365.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Blindspots in Defender for Endpoint: What MDE Misses in Network Traffic</title>
-      <link>http://localhost:1313/posts/mde_npcap_blindspots/</link>
+      <link>https://ninous.dev/posts/mde_npcap_blindspots/</link>
       <pubDate>Sat, 16 Aug 2025 15:15:00 -0400</pubDate>
-      <guid>http://localhost:1313/posts/mde_npcap_blindspots/</guid>
+      <guid>https://ninous.dev/posts/mde_npcap_blindspots/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;Earlier this year on LinkedIn, I shared a quirky &amp;ldquo;feature&amp;rdquo; in Microsoft Defender for Endpoint (MDE): it happily accepts input from the user as trusted without any validation.&lt;br&gt;
 &lt;a href=&#34;https://www.linkedin.com/feed/update/urn:li:activity:7317305441527422976/&#34;&gt;(LinkedIn Post)&lt;/a&gt;.&lt;/p&gt;
@@ -23,30 +38,14 @@ Not an exploit, but a perfect way to hide malicious traffic under the &amp;ldquo
     </item>
     <item>
       <title>Detecting Internal Domain Collision with Defender for Endpoint</title>
-      <link>http://localhost:1313/posts/case-study/</link>
+      <link>https://ninous.dev/posts/case-study/</link>
       <pubDate>Fri, 25 Jul 2025 13:37:10 -0400</pubDate>
-      <guid>http://localhost:1313/posts/case-study/</guid>
+      <guid>https://ninous.dev/posts/case-study/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;While onboarding a client to Microsoft Sentinel and MDE, I discovered a subtle misconfiguration involving internal device names leaking to public DNS. This blog breaks down how I found it, the detection logic I used, and how this seemingly harmless mistake could have led to credential theft through a supply-chain vector.&lt;/p&gt;&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;the-setting&#34;&gt;The Setting&lt;/h2&gt;
 &lt;p&gt;A recent project involved onboarding a new client to Microsoft Sentinel. Their tenant and workspace were already configured, along with Defender XDR. My job was to reduce alert fatigue by fine-tuning analytics rules, whitelisting noise (after validating it wasn&amp;rsquo;t malicious), and creating new rules for coverage gaps.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/posts/bec_case_study/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bec_case_study/</guid>
-      <description>&lt;h1 id=&#34;when-trusted-senders-become-threats-a-bec-case-study-in-microsoft-365&#34;&gt;When Trusted Senders Become Threats: A BEC Case Study in Microsoft 365&lt;/h1&gt;
-&lt;p&gt;Recently I received a ticket to create a detection for a client BEC. Microsoft Defender for Office 365 (MDO) didn’t flag the email, but Entra ID raised &lt;strong&gt;Unfamiliar sign-in properties&lt;/strong&gt; and the incident surfaced in Sentinel.&lt;/p&gt;
-&lt;h2 id=&#34;storytime-the-signals-we-saw&#34;&gt;Storytime: the signals we saw&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Sentinel incident: &lt;strong&gt;unfamiliar sign-in properties&lt;/strong&gt;; Entra ID labeled it as risky.&lt;/li&gt;
-&lt;li&gt;Indicators: &lt;strong&gt;User-Agent &lt;code&gt;axios/1.11.0&lt;/code&gt;&lt;/strong&gt;, sign-in source: &lt;strong&gt;M247-LTD Los Angeles Infrastructure&lt;/strong&gt; (&lt;code&gt;m247global.com&lt;/code&gt;)—classic hosting/DC footprint.&lt;/li&gt;
-&lt;li&gt;Conditional Access forced MFA; logs confirm &lt;strong&gt;MFA was passed&lt;/strong&gt;.&lt;/li&gt;
-&lt;li&gt;The client confirmed compromise. The user was &lt;strong&gt;in-office&lt;/strong&gt;, no VPN or odd third-party apps.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;I pivoted to URL clicks around the time of the malicious sign-in. In &lt;strong&gt;UrlClickEvents&lt;/strong&gt; for the victim over the prior few hours, most URLs looked normal—but one stood out. Sandboxing showed a &lt;strong&gt;“file was shared → enter email”&lt;/strong&gt; lure that then &lt;strong&gt;redirected to a newly registered &lt;code&gt;.ru&lt;/code&gt;&lt;/strong&gt; page impersonating Microsoft 365.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
