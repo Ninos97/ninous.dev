@@ -6,8 +6,19 @@
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 06 Sep 2025 18:52:10 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 04 Oct 2025 16:15:00 -0400</lastBuildDate>
     <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>From Silent Failures to Reliable Baselines: Sentinel Lookback Limitations Workaround with Summary Rules</title>
+      <link>https://ninous.dev/posts/sentinel_lookback_blog/</link>
+      <pubDate>Sat, 04 Oct 2025 16:15:00 -0400</pubDate>
+      <guid>https://ninous.dev/posts/sentinel_lookback_blog/</guid>
+      <description>&lt;p&gt;I recently stumbled onto a strange behavior in Microsoft Sentinel while testing a query I had built a few weeks earlier (Check my previous &lt;a href=&#34;https://ninous.dev/posts/bec_case_study/&#34;&gt;blog&lt;/a&gt;). I had pushed a rule in test mode to observe firing rate and fidelity. Two weeks later, while presenting the query, I ran it over historical data and got a hit. But when I checked the &lt;strong&gt;Incidents&lt;/strong&gt; tab, the rule had never triggered.&lt;/p&gt;
+&lt;p&gt;What happened?&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;
+&lt;p&gt;In my case, I had built a baseline query that looked back &lt;strong&gt;14 days&lt;/strong&gt; to map each UPN -&amp;gt; {Set_of_IPs}. The Analytics rule, however, was configured with a &lt;strong&gt;2-day lookback&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>When Trusted Senders Become Threats: A BEC Case Study in Microsoft 365</title>
       <link>https://ninous.dev/posts/bec_case_study/</link>

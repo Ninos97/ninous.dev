@@ -141,6 +141,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">From Silent Failures to Reliable Baselines: Sentinel Lookback Limitations Workaround with Summary Rules
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I recently stumbled onto a strange behavior in Microsoft Sentinel while testing a query I had built a few weeks earlier (Check my previous blog). I had pushed a rule in test mode to observe firing rate and fidelity. Two weeks later, while presenting the query, I ran it over historical data and got a hit. But when I checked the Incidents tab, the rule had never triggered.
+What happened?
+The Problem In my case, I had built a baseline query that looked back 14 days to map each UPN -&gt; {Set_of_IPs}. The Analytics rule, however, was configured with a 2-day lookback.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-04 16:15:00 -0400 EDT'>October 4, 2025</span>&nbsp;·&nbsp;5 min</footer>
+  <a class="entry-link" aria-label="post link to From Silent Failures to Reliable Baselines: Sentinel Lookback Limitations Workaround with Summary Rules" href="https://ninous.dev/posts/sentinel_lookback_blog/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">When Trusted Senders Become Threats: A BEC Case Study in Microsoft 365
     </h2>
   </header>
