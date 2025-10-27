@@ -27,6 +27,16 @@ params:
   defaultTheme: dark
   comments: false
 
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    parser:
+      attribute:
+        block: true
+        title: true
+
+
 menu:
   main:
   - identifier: posts

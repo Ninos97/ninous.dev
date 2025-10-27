@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Case Study: When Defender Misread a Windows Upgrade as Ransomware | Ninous.dev</title>
+<meta name="keywords" content="">
+<meta name="description" content="Disclaimer
+
+All data and screenshots are fully anonymized and used for educational purposes only.
+Summary
+
+A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.
+This case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.
+Story Time
+Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded.
+First things first: isolate, then investigate.">
+<meta name="author" content="">
+<link rel="canonical" href="https://ninous.dev/posts/ransomware_false_positive_blog/">
+<link crossorigin="anonymous" href="https://ninous.dev/assets/css/stylesheet.36819bea596090d8b48cf10d9831382996197aa7e4fc86f792f7c08c9ca4d23b.css" integrity="sha256-NoGb6llgkNi0jPENmDE4KZYZeqfk/Ib3kvfAjJyk0js=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://ninous.dev/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ninous.dev/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ninous.dev/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ninous.dev/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ninous.dev/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://ninous.dev/posts/ransomware_false_positive_blog/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://ninous.dev/posts/ransomware_false_positive_blog/">
+  <meta property="og:site_name" content="Ninous.dev">
+  <meta property="og:title" content="Case Study: When Defender Misread a Windows Upgrade as Ransomware">
+  <meta property="og:description" content="Disclaimer All data and screenshots are fully anonymized and used for educational purposes only.
+Summary A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.
+This case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.
+Story Time Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded. First things first: isolate, then investigate.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-26T00:00:00-04:00">
+    <meta property="article:modified_time" content="2025-10-26T00:00:00-04:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Case Study: When Defender Misread a Windows Upgrade as Ransomware">
+<meta name="twitter:description" content="Disclaimer
+
+All data and screenshots are fully anonymized and used for educational purposes only.
+Summary
+
+A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.
+This case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.
+Story Time
+Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded.
+First things first: isolate, then investigate.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://ninous.dev/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Case Study: When Defender Misread a Windows Upgrade as Ransomware",
+      "item": "https://ninous.dev/posts/ransomware_false_positive_blog/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Case Study: When Defender Misread a Windows Upgrade as Ransomware",
+  "name": "Case Study: When Defender Misread a Windows Upgrade as Ransomware",
+  "description": "Disclaimer All data and screenshots are fully anonymized and used for educational purposes only.\nSummary A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.\nThis case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.\nStory Time Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded. First things first: isolate, then investigate.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Disclaimer All data and screenshots are fully anonymized and used for educational purposes only.\nSummary A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.\nThis case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.\nStory Time Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded. First things first: isolate, then investigate.\nThe case was classified as multi-stage, meaning several detections rolled into a single incident. This one had four parts.\nThe first alert, “Suspicious service launched,” immediately caught my attention. Those always make me uneasy because they can indicate long-term persistence finally executing after a period of silence. If that were true, it could’ve been sitting quietly across multiple endpoints. (Interestingly, another device triggered a different multi-stage in the same hour with the same first three components, but the last one was labeled “info-stealer.” Side note: weird to have an info-stealer as a service, right?)\nThe second alert, “Suspicious hardware discovery,” didn’t concern me much. In my experience, those are rarely true positives. (Though, part of me kind of wants to see one… just without dealing with the aftermath, obviously.)\nThen came the third: “Anomaly detected in ASEP registry.” If you’re not familiar, ASEP stands for Auto Start Entry Point (or Auto-Start Extensibility Point, depending on which doc you read). These registry keys let binaries execute automatically. Typically at boot. In simpler terms, it’s persistence through the registry.\nAnd finally, the big one, the so-called ransomware.\nsvchost.exe the usual. Nothing special happening here.\nA quick Google search confirmed that TSManager.exe is part of SCCM, responsible for handling task sequences during deployments and updates. I also double-checked the LOLBAS project just in case it was one of those dual-use binaries that could be abused by attackers, it wasn’t.\nEven the WMI queries looked completely normal. At that point, I wasn’t really following Microsoft’s logic for flagging this chain.\nThen I noticed a few binaries I didn’t immediately recognize. Based on their names, though, they looked like OS upgrade components, nothing out of the ordinary. Still, I had to be sure. OSDUpgradeOS.exe and OSDPrestartCheck.exe were both signed by Microsoft, and VirusTotal confirmed they were legitimate. So far, the story checked out.\nNext up was setup.exe, running with a rather long command line:\nEULA = End User License Agreement\nNoReboot = No reboot after completion\nPostOOBE = Post Out-Of-Box Experience\nThere were also two CMD scripts for post-upgrade or rollback operations. Once again, perfectly normal behavior for an in-place Windows upgrade. I validated both using Invoke FileProfile on their hashes, they were common across multiple environments.\nThe trail continued with more setup activity, I don’t see anything suspicious yet.\nThen came the next sequence of processes. I wasn’t familiar with the path at first, so I Googled it. Turns out, it’s one Windows uses temporarily during upgrades. So again, routine behavior.\nMore benign processes here and there, nothing special.\nAs I went further down the timeline, I kept seeing more system processes behaving exactly as expected. At this point, I had no clue why I was looking at what Defender labeled a ransomware incident.\nThen something new caught my eye: a set of records named $OFFLINE_RE_HEX(Sid).\nGoogling didn’t help much, so I resorted to ChatGPT for context (please don’t judge me). Here’s what I learned:\nHKEY_CURRENT_USER (HKCU) isn’t a standalone hive, it’s a pointer to the user’s ntuser.dat file stored under C:\\Users\\\\ntuser.dat. When a user logs in, Windows loads that hive into memory.\nIt seems MDE monitors for changes involving ntuser.dat, which makes perfect sense since it’s a common persistence target. In this case, though, there weren’t any malicious modifications. My theory is that the Windows upgrade process copied these profile files from their original paths to a temporary staging directory. Because MDE keeps a close eye on sensitive files, it flagged these copy operations as registry anomalies affecting HKCU.\nAnd since the user wasn’t logged in during the upgrade, MDE labeled those entries as offline_rw_HEX, meaning modifications to offline user hives.\nIf anyone reading this has a better explanation, feel free to correct me, always happy to learn.\nI went through each of those offline entries, and every single one showed benign activity: Teams updating, OneDrive starting, and other routine background tasks.\nOnce again, everything looked normal. Expected behavior. Definitely not ransomware.\nNext up was smstsmgr.exe: a quick Google search confirmed it’s yet another legitimate Windows component.\nAnd then, finally, things started to get interesting, the so-called “ransomware.”\nOh, did I mention I love MOTW (Mark-of-the-Web)? Because I do.\nNow things were finally starting to make sense… but there were still a few caveats.\nHow did this file even end up on the device? It was clearly sitting in the Downloads folder, but why hadn’t it triggered anything before? Was it ever executed?\nBased on the indicators of compromise, I could make an educated guess: this looked like Gootloader. The filename structure gave it away. It followed the same pattern as a previous Gootloader case I investigated back in early 2023:\nword1_word2_word3_..._number.zip\nThat path told me everything: the file had been copied to NewOS\\Users\\\\Downloads during the Windows upgrade process.\nWhen MDE triggered the incident, the malware wasn’t running at all. It had simply been sitting there, dormant, for quite some time. Over a year, in fact.\nWhat didn’t make sense was why Defender treated this as a multi-stage ransomware event when the only malicious element was an old ZIP file quietly sitting on disk. Why now? Why label it as active ransomware?\nWell… here’s why:\nAnd there it was, the smoking gun.\nThe process that “created” the malicious ZIP file? setupHost.exe.\nFrom earlier, we already knew it’s a legitimate Windows component used during upgrades. The logs showed that setupHost.exe modified over 5,000 files, which simply meant it was copying user data, including the Downloads folder, to the staging directory for the Windows 10 → 11 upgrade.\nSo why didn’t this trigger before? Simple: the device never had a Full Scan.\nThe client had deployed MDE but skipped the post-onboarding full scan. The malicious ZIP had been sitting there long before Defender ever showed up. Since no process interacted with it, MDE didn’t know it existed until setupHost.exe copied it, and that single action checked all the boxes for ransomware behavior: High count of file modifications + MOTW correlation + known CTI of Gootloader abused domain.\nThankfully, this one turned out to be a false positive in context. The file itself was indeed malicious, but it wasn’t active. Defender flagged it only because the upgrade process interacted with an old artifact that had been sitting there for over a year.\nStill, it was a fascinating case, a reminder of how Defender stitches together behavioral data to tell a story, even when that story doesn’t quite fit the facts.\nFalse positives like this are gold. They reveal how the black box thinks, how detections correlate, and where logic can overreach. Every one of them teaches us something new.\nLessons Learned This case was a solid reminder that Defender’s behavioral correlation is powerful, but context matters.\nWhen onboarding endpoints, always run a Full Scan to surface dormant threats before they reappear during legitimate processes.\nIt also highlighted how Defender leverages MOTW and file modification patterns to identify ransomware activity. Even legitimate processes can look malicious when context is missing.\nKey Takeaways Not every ransomware detection means active ransomware. Always perform a Full Scan post-onboarding. Windows upgrades can trigger false positives when old malware resurface, even if it isn’t running because legitimate processes can still interact with malicious files.. Understanding Defender’s behavioral logic helps separate real threats from misinterpreted activity. References (1) https://learn.microsoft.com/en-us/defender-endpoint/respond-machine-alerts\n(2) https://app.tidalcyber.com/capability/0bbc5707-1fc2-52a4-86cc-d05bec4a518f\nThis one turned out to be a false positive, but a pretty interesting one. The best part? It taught me more about how MDE’s internal logic connects seemingly unrelated signals into a coherent story, even when that story occasionally needs a fact-check.\n",
+  "wordCount" : "1355",
+  "inLanguage": "en",
+  "datePublished": "2025-10-26T00:00:00-04:00",
+  "dateModified": "2025-10-26T00:00:00-04:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ninous.dev/posts/ransomware_false_positive_blog/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ninous.dev",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ninous.dev/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ninous.dev/" accesskey="h" title="Ninous.dev (Alt + H)">Ninous.dev</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ninous.dev/" title="posts">
+                    <span>posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ninous.dev/whoami/" title="whoami">
+                    <span>whoami</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ninous.dev/disclaimer/" title="disclaimer">
+                    <span>disclaimer</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Case Study: When Defender Misread a Windows Upgrade as Ransomware
+    </h1>
+    <div class="post-meta"><span title='2025-10-26 00:00:00 -0400 EDT'>October 26, 2025</span>&nbsp;·&nbsp;7 min
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="disclaimer">Disclaimer<a hidden class="anchor" aria-hidden="true" href="#disclaimer">#</a></h2>
+<blockquote>
+<p>All data and screenshots are fully anonymized and used for educational purposes only.</p></blockquote>
+<h2 id="summary">Summary<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<blockquote>
+<p>A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.</p>
+<p>This case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.</p></blockquote>
+<h2 id="story-time">Story Time<a hidden class="anchor" aria-hidden="true" href="#story-time">#</a></h2>
+<p>Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded.
+First things first: <strong>isolate</strong>, then investigate.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/1.png"></p>
+<p>The case was classified as multi-stage, meaning several detections rolled into a single incident. This one had four parts.</p>
+<p>The first alert, <em>“Suspicious service launched,”</em> immediately caught my attention. Those always make me uneasy because they <em>can</em> indicate long-term persistence finally executing after a period of silence. If that were true, it could’ve been sitting quietly across multiple endpoints. (Interestingly, another device triggered a different multi-stage in the same hour with the same first three components, but the last one was labeled <em>“info-stealer.”</em> Side note: weird to have an info-stealer as a <strong>service</strong>, right?)</p>
+<p>The second alert, <em>“Suspicious hardware discovery,”</em> didn’t concern me much. In my experience, those are rarely true positives. (Though, part of me kind of wants to see one… just without dealing with the aftermath, obviously.)</p>
+<p>Then came the third: <em>“Anomaly detected in ASEP registry.”</em>
+If you’re not familiar, <strong>ASEP</strong> stands for <strong>Auto Start Entry Point</strong> (or <strong>Auto-Start Extensibility Point</strong>, depending on which doc you read). These registry keys let binaries execute automatically. Typically at boot. In simpler terms, it’s persistence through the registry.</p>
+<p>And finally, the big one, the so-called <em>ransomware</em>.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/2.png"></p>
+<p><code>svchost.exe</code> the usual. Nothing special happening here.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/3.png">
+<img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/4.png"></p>
+<p>A quick Google search confirmed that <strong>TSManager.exe</strong> is part of SCCM, responsible for handling task sequences during deployments and updates. I also double-checked the <strong>LOLBAS</strong> project just in case it was one of those dual-use binaries that could be abused by attackers, it wasn’t.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/5.png"></p>
+<p>Even the <strong>WMI</strong> queries looked completely normal. At that point, I wasn’t really following Microsoft’s logic for flagging this chain.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/6.png"></p>
+<p>Then I noticed a few binaries I didn’t immediately recognize. Based on their names, though, they looked like OS upgrade components, nothing out of the ordinary. Still, I had to be sure. <strong>OSDUpgradeOS.exe</strong> and <strong>OSDPrestartCheck.exe</strong> were both signed by Microsoft, and VirusTotal confirmed they were legitimate. So far, the story checked out.</p>
+<p>Next up was <strong>setup.exe</strong>, running with a rather long command line:</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/7.png"></p>
+<blockquote>
+<p><strong>EULA</strong> = End User License Agreement<br>
+<strong>NoReboot</strong> = No reboot after completion<br>
+<strong>PostOOBE</strong> = Post Out-Of-Box Experience</p></blockquote>
+<p>There were also two CMD scripts for post-upgrade or rollback operations. Once again, perfectly normal behavior for an in-place Windows upgrade. I validated both using <code>Invoke FileProfile</code> on their hashes, they were common across multiple environments.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/8.png"></p>
+<p>The trail continued with more setup activity, I don&rsquo;t see anything suspicious yet.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/9.png"></p>
+<p>Then came the next sequence of processes. I wasn’t familiar with the path at first, so I Googled it. Turns out, it’s one Windows uses temporarily during upgrades. So again, routine behavior.</p>
+<p>More benign processes here and there, nothing special.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/10.png"></p>
+<p>As I went further down the timeline, I kept seeing more system processes behaving exactly as expected. At this point, I had no clue why I was looking at what Defender labeled a ransomware incident.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/11.png">
+<img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/12.png">
+<img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/13.png"></p>
+<p>Then something new caught my eye: a set of records named <code>$OFFLINE_RE_HEX(Sid)</code>.</p>
+<p>Googling didn’t help much, so I resorted to ChatGPT for context (please don’t judge me). Here’s what I learned:</p>
+<p><code>HKEY_CURRENT_USER</code> (<strong>HKCU</strong>) isn’t a standalone hive, it’s a pointer to the user’s <code>ntuser.dat</code> file stored under <code>C:\Users\&lt;username&gt;\ntuser.dat</code>. When a user logs in, Windows loads that hive into memory.</p>
+<p>It seems MDE monitors for changes involving <code>ntuser.dat</code>, which makes perfect sense since it’s a common persistence target. In this case, though, there weren’t any malicious modifications. My theory is that the Windows upgrade process copied these profile files from their original paths to a temporary staging directory. Because MDE keeps a close eye on sensitive files, it flagged these copy operations as registry anomalies affecting HKCU.</p>
+<p>And since the user wasn’t logged in during the upgrade, MDE labeled those entries as <code>offline_rw_HEX</code>, meaning modifications to offline user hives.</p>
+<p>If anyone reading this has a better explanation, feel free to correct me, always happy to learn.</p>
+<p>I went through each of those offline entries, and every single one showed benign activity: Teams updating, OneDrive starting, and other routine background tasks.</p>
+<p>Once again, everything looked normal. Expected behavior. Definitely not ransomware.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/14.png"></p>
+<p>Next up was <strong>smstsmgr.exe</strong>: a quick Google search confirmed it’s yet another legitimate Windows component.</p>
+<p>And then, finally, things started to get interesting, the so-called <em>“ransomware.”</em></p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/15.png">
+<img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/16.png">
+<img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/17.png"></p>
+<p>Oh, did I mention I love <strong>MOTW</strong> (Mark-of-the-Web)? Because I do.</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/18.png"></p>
+<p>Now things were finally starting to make sense… but there were still a few caveats.</p>
+<p>How did this file even end up on the device? It was clearly sitting in the <strong>Downloads</strong> folder, but why hadn’t it triggered anything before? Was it ever executed?</p>
+<p>Based on the indicators of compromise, I could make an educated guess: this looked like <strong>Gootloader</strong>. The filename structure gave it away. It followed the same pattern as a previous Gootloader case I investigated back in early 2023:</p>
+<p><code>word1_word2_word3_..._number.zip</code></p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/19.png"></p>
+<p>That path told me everything: the file had been copied to <code>NewOS\Users\&lt;username&gt;\Downloads</code> during the Windows upgrade process.</p>
+<p>When MDE triggered the incident, the malware wasn’t running at all. It had simply been sitting there, dormant, for quite some time. Over a year, in fact.</p>
+<p>What didn’t make sense was why Defender treated this as a <strong>multi-stage ransomware</strong> event when the only malicious element was an old ZIP file quietly sitting on disk. Why now? Why label it as active ransomware?</p>
+<p>Well… here’s why:</p>
+<p><img loading="lazy" src="https://ninous.dev/assets/images/ransomware-incident/20.png"></p>
+<p>And there it was, the smoking gun.</p>
+<p>The process that “created” the malicious ZIP file? <strong>setupHost.exe.</strong></p>
+<p>From earlier, we already knew it’s a legitimate Windows component used during upgrades. The logs showed that setupHost.exe modified over <strong>5,000 files</strong>, which simply meant it was copying user data, including the <strong>Downloads</strong> folder, to the staging directory for the Windows 10 → 11 upgrade.</p>
+<p>So why didn’t this trigger before? Simple: the device never had a <strong>Full Scan</strong>.</p>
+<p>The client had deployed MDE but skipped the post-onboarding full scan. The malicious ZIP had been sitting there long before Defender ever showed up. Since no process interacted with it, MDE didn’t know it existed until setupHost.exe copied it, and that single action checked all the boxes for ransomware behavior:
+<strong>High count of file modifications + MOTW correlation + known CTI of Gootloader abused domain</strong>.</p>
+<p>Thankfully, this one turned out to be a <strong>false positive in context</strong>. The file itself was indeed malicious, but it wasn’t active. Defender flagged it only because the upgrade process interacted with an old artifact that had been sitting there for over a year.</p>
+<p>Still, it was a fascinating case, a reminder of how Defender stitches together behavioral data to tell a story, even when that story doesn’t quite fit the facts.</p>
+<p>False positives like this are gold. They reveal how the black box thinks, how detections correlate, and where logic can overreach. Every one of them teaches us something new.</p>
+<hr>
+<h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
+<p>This case was a solid reminder that <strong>Defender’s behavioral correlation is powerful, but context matters</strong>.</p>
+<p>When onboarding endpoints, always run a <strong>Full Scan</strong> to surface dormant threats before they reappear during legitimate processes.</p>
+<p>It also highlighted how Defender leverages <strong>MOTW</strong> and file modification patterns to identify ransomware activity. Even legitimate processes can look malicious when context is missing.</p>
+<hr>
+<h2 id="key-takeaways">Key Takeaways<a hidden class="anchor" aria-hidden="true" href="#key-takeaways">#</a></h2>
+<ul>
+<li>Not every ransomware detection means active ransomware.</li>
+<li>Always perform a <strong>Full Scan</strong> post-onboarding.</li>
+<li>Windows upgrades can trigger false positives when old malware resurface, even if it isn’t running because legitimate processes can still interact with malicious files..</li>
+<li>Understanding Defender’s behavioral logic helps separate real threats from misinterpreted activity.</li>
+</ul>
+<hr>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<p>(1) <a href="https://learn.microsoft.com/en-us/defender-endpoint/respond-machine-alerts">https://learn.microsoft.com/en-us/defender-endpoint/respond-machine-alerts</a><br>
+(2) <a href="https://app.tidalcyber.com/capability/0bbc5707-1fc2-52a4-86cc-d05bec4a518f">https://app.tidalcyber.com/capability/0bbc5707-1fc2-52a4-86cc-d05bec4a518f</a></p>
+<p>This one turned out to be a false positive, but a pretty interesting one. The best part? It taught me more about how MDE’s internal logic connects seemingly unrelated signals into a coherent story, even when that story occasionally needs a fact-check.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on x"
+            href="https://x.com/intent/tweet/?text=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware&amp;url=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f&amp;hashtags=">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f&amp;title=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware&amp;summary=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware&amp;source=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on reddit"
+            href="https://reddit.com/submit?url=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f&title=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on whatsapp"
+            href="https://api.whatsapp.com/send?text=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware%20-%20https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on telegram"
+            href="https://telegram.me/share/url?text=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware&amp;url=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Case Study: When Defender Misread a Windows Upgrade as Ransomware on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=Case%20Study%3a%20When%20Defender%20Misread%20a%20Windows%20Upgrade%20as%20Ransomware&u=https%3a%2f%2fninous.dev%2fposts%2fransomware_false_positive_blog%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://ninous.dev/">Ninous.dev</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

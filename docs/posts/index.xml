@@ -6,8 +6,24 @@
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Oct 2025 16:15:00 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 26 Oct 2025 00:00:00 -0400</lastBuildDate>
     <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Case Study: When Defender Misread a Windows Upgrade as Ransomware</title>
+      <link>https://ninous.dev/posts/ransomware_false_positive_blog/</link>
+      <pubDate>Sun, 26 Oct 2025 00:00:00 -0400</pubDate>
+      <guid>https://ninous.dev/posts/ransomware_false_positive_blog/</guid>
+      <description>&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;All data and screenshots are fully anonymized and used for educational purposes only.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A Windows 11 upgrade, a dormant Gootloader ZIP, and Defender’s behavioral correlation logic. A mix that led to one of the most interesting false positives I’ve seen.&lt;/p&gt;
+&lt;p&gt;This case-study walks through how Defender pieced together legitimate upgrade activity into a multi-stage ransomware incident, and what it says about context in detection engineering.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;story-time&#34;&gt;Story Time&lt;/h2&gt;
+&lt;p&gt;Recently, I worked on a multi-stage incident where the final stage turned out to be ransomware. Here’s how it unfolded.
+First things first: &lt;strong&gt;isolate&lt;/strong&gt;, then investigate.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>From Silent Failures to Reliable Baselines: Sentinel Lookback Limitations Workaround with Summary Rules</title>
       <link>https://ninous.dev/posts/sentinel_lookback_blog/</link>
