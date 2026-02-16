@@ -6,8 +6,19 @@
     <description>Recent content in Posts on Ninous.dev</description>
     <generator>Hugo -- 0.148.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Oct 2025 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 13 Feb 2026 23:00:00 -0400</lastBuildDate>
     <atom:link href="https://ninous.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Identifying Unusual User-Agents: a Hands-On Hunt</title>
+      <link>https://ninous.dev/posts/user-agents/</link>
+      <pubDate>Fri, 13 Feb 2026 23:00:00 -0400</pubDate>
+      <guid>https://ninous.dev/posts/user-agents/</guid>
+      <description>&lt;h2 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I usually use ChatGPT to format and rewrite the text for a better structure. For this post, I decided to do it without the usage of any LLM.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;personal-updates&#34;&gt;Personal updates&lt;/h2&gt;
+&lt;p&gt;It has been a while since I posted anything new. I&amp;rsquo;ve been quiet busy last couple of months. I traveled to Zurich to attend &lt;strong&gt;KustoCon&lt;/strong&gt;, it was amazing. I kinda wish there was a similar event in Montreal. Maybe one day.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Case Study: When Defender Misread a Windows Upgrade as Ransomware</title>
       <link>https://ninous.dev/posts/ransomware_false_positive_blog/</link>
